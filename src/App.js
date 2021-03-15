@@ -7,6 +7,7 @@ import Post from './Post';
 import './App.css';
 import { db, auth } from './firebase';
 import ImageUpload from './ImageUpload';
+import Logo from './logo.jpg';
 
 function getModalStyle() {
   const top = 50;
@@ -54,7 +55,7 @@ function App() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(authUser => {
       if(authUser) {
-        console.log(authUser);
+        // console.log(authUser);
         setUser(authUser);
       } else {
         setUser(null);
@@ -91,12 +92,6 @@ function App() {
 
   return (
     <div className="app">
-      {user?.displayName ? ( 
-        <ImageUpload username={user.displayName} /> 
-      ) : ( 
-        <h3>Sorry you need to login to upload!</h3> 
-      )}
-
       <Modal
         open={open}
         onClose={() => setOpen(false)}>
@@ -105,7 +100,8 @@ function App() {
               <center>
                 <img 
                   className="app__headerImage"
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" 
+                  // src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" 
+                  src={Logo}
                   alt=""
                 />
               </center>
@@ -139,7 +135,8 @@ function App() {
               <center>
                 <img 
                   className="app__headerImage"
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" 
+                  // src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" 
+                  src={Logo}
                   alt=""
                 />
               </center>
@@ -166,20 +163,30 @@ function App() {
           alt=""
         /> */}
         <h1 style={{letterSpacing: '2px', cursor: 'pointer'}}>FlipClip</h1>
+
+        {user ?
+          <Button onClick={() => auth.signOut()}>Logout</Button>
+          : ( 
+            <div className="app__loginContainer">
+              <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+              <Button onClick={() => setOpen(true)}>Sign Up</Button>
+            </div>
+        )}
       </div>
 
-      {user ?
-        <Button onClick={() => auth.signOut()}>Logout</Button>
-        : ( 
-          <div className="app__loginContainer">
-            <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
-            <Button onClick={() => setOpen(true)}>Sign Up</Button>
-          </div>
-      )}
+      <div className="app__posts">
+        <div className="app__postsLeft">
+          {posts.map(({id, post}) => (
+            <Post key={id} postId={id} user={user} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+          ))}
+        </div>
+      </div>
 
-      {posts.map(({id, post}) => (
-        <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
-      ))}
+      {user?.displayName ? ( 
+        <ImageUpload username={user.displayName} /> 
+      ) : ( 
+        <h3>Sorry you need to login to upload!</h3> 
+      )}
     </div>
   );
 }

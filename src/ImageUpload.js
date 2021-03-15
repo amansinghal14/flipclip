@@ -3,23 +3,28 @@ import firebase from 'firebase';
 
 import { Button } from '@material-ui/core';
 import { storage, db } from './firebase';
+import './ImageUpload.css';
 
 const ImageUpload = ({username}) => {
   const [caption, setCaption] = useState('');
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
+  const [value, setValue] = useState('');
 
   const handleChange = (event) => {
-    if(event.targert.files[0]) {
+    // console.log('handlechange', event.target.value);
+    if(event.target.files[0]) {
       setImage(event.target.files[0]);
+      setValue(event.target.value);
+      // console.log(event.target.files[0]);
     }
   };
 
   const handleUpload = () => {
-    const uploadTask = storage.ref(`images/${image.name}`).put(image.name);
+    // console.log('handleupload', image);
+    const uploadTask = storage.ref(`images/${image.name}`).put(image);
 
-    uploadTask.on(
-      "state_changed",
+    uploadTask.on("state_changed",
       (snapshot) => {
         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
         setProgress(progress);
@@ -44,21 +49,22 @@ const ImageUpload = ({username}) => {
             setProgress(0);
             setCaption('');
             setImage(null);
+            setValue('');
           });
       }
     );
   };
 
   return (
-    <div>
-      <progress value={progress} max="100" />
+    <div className="imageupload">
+      <progress className="imageupload__progress" value={progress} max="100" />
       <input 
         type="text" 
         placeholder="Enter a caption..." 
         onChange={event => setCaption(event.target.value)} 
         value={caption} 
       />
-      <input type="file" onChange={handleChange} />
+      <input type="file" onChange={handleChange} value={value} />
       <Button onClick={handleUpload}>Upload</Button>
     </div>
   );

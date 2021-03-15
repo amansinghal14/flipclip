@@ -1,13 +1,14 @@
 .post {
   max-width: 500px;
   border: 1px solid lightgray;
+  /* border-radius: 10px; */
   margin-bottom: 45px;
 }
 
 .post__header {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: 10px 15px;
 }
 
 .post__avatar {
@@ -22,6 +23,27 @@
 }
 
 .post__text {
-  padding: 20px;
+  padding: 15px;
   font-weight: normal;
+}
+
+.post__commentBox {
+  display: flex;
+  margin-top: 10px;
+}
+
+.post__comments {
+  padding: 10px 20px;
+}
+
+.post__input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  border-top: 1px solid lightgray;
+}
+
+.post__button {
+  flex: 0;
+  cursor: pointer;
 }
